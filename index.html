@@ -11,61 +11,88 @@
     <input type="number" id="mom" placeholder="분모" min="1">
     <button id="submit" type="button">확인</button>
 
+    <p id="str"></p>
+    <p id="mane"></p>
     <p id="result"></p>
 
     <script>
-    document.getElementById('submit').addEventListener('click', function() {
-        let son = parseInt(document.getElementById("son").value);
-        let mom = parseInt(document.getElementById("mom").value);
+       document.getElementById('submit').addEventListener('click', function() {
 
-        if (!son || !mom || mom === 0) {
-            document.getElementById("result").innerText = "분모는 0이 될 수 없습니다!";
-            return;
-        }
+            let son = parseInt(document.getElementById("son").value);
+            let mom = parseInt(document.getElementById("mom").value);
 
-        let a = []; // 몫 저장
-        let seen = {}; // 나머지와 위치 저장
-
-        let num = Math.floor(son / mom);
-        let rem = son % mom;
-
-        a.push(num);
-
-        let repeatIndex = -1; // 반복 시작 위치 초기화
-        while(rem !== 0) {
-            if (seen[rem] !== undefined) { // 반복 시작 발견
-                repeatIndex = seen[rem];
-                break;
+            if (!son || !mom || mom === 0) {
+                document.getElementById("result").innerText = "분모는 0이 될 수 없습니다!";
+                return;
             }
-            seen[rem] = a.length; // 현재 몫의 위치 저장
-            son = rem * 10;
-            num = Math.floor(son / mom);
+
+            let a = []; // 몫 저장
+            let c = []; // 나머지 저장
+
+            let num = Math.floor(son / mom); // 몫
+            let tsh2 = son % mom;            // 나머지
+
             a.push(num);
-            rem = son % mom;
-        }
 
-        // 단순 소수 (유한소수)
-        if(rem === 0) {
-            document.getElementById("result").innerHTML = "<b>" + a[0] + "." + a.slice(1).join('') + "</b>";
-            return;
-        }
+            i = 0;
 
-        // 반복 소수 처리
-        let num1 = a[0]; // 정수 부분
-        let numbo = a.slice(1, repeatIndex).join(''); // 반복 시작 전 소수
-        let repeat = a.slice(repeatIndex); // 반복 구간 전체
+            document.getElementById("str").innerHTML = "<b>" + son + "/" + mom + "=" + a[i] +"..." + tsh2 + "</b>";
+          i++;   
 
-        // 반복 시작과 끝 모두 점 표시
-        let repeatStart = repeat[0];
-        let repeatRest = repeat.slice(1);
-        let repeatEnd = repeatRest.pop() || "";
+            while(tsh2 !== 0 && !c.includes(tsh2)) {
+                son = tsh2 * 10;
+                num = Math.floor(son / mom);
+                a.push(num);
+                c.push(tsh2);
+                tsh2 = son % mom;
+                document.getElementById("mane").innerHTML = "<b>" + son + "/" + mom + "=" + a[i] +"..." + tsh2+ "</b>";
+                i++;   
+            }
 
-        document.getElementById("result").innerHTML =
-            "<b>" + num1 + "." + numbo +
-            "<ruby>" + repeatStart + "<rp>(</rp><rt>•</rt><rp>)</rp></ruby>" +
-            repeatRest.join('') +
-            "<ruby>" + repeatEnd + "<rp>(</rp><rt>•</rt><rp>)</rp></ruby></b>";
-    });
+            son = tsh2 * 10;
+                num = Math.floor(son / mom);
+                a.push(num);
+                c.push(tsh2);
+                tsh2 = son % mom
+
+            console.log(a);
+            console.log(c);
+
+            // 단순 소수인지 확인
+            if(c.includes(0)) {
+                document.getElementById("result").innerHTML = "<b>" + a[0] + "." + a.slice(1).join('') + "</b>";
+                return;
+            }
+            
+           
+
+            // 반복 소수 처리
+            let dup = num; // 반복 시작 나머지
+            a.pop();
+            let place = a.indexOf(num); // 반복 시작 위치
+
+            let num1 = a[0];                 // 정수 부분
+            let numbo = a.slice(1, place); // 반복 시작 전 소수
+
+            let num2 = a[place] || "";          // 반복 시작 몫
+            
+            let suba = a.slice(place+1,a.length-1) || [];    // 반복 구간 나머지
+
+            let num3 = a[a.length-1] || "";
+            
+            if(numbo.length === 0) { // 반복 1자리
+             document.getElementById("result").innerHTML =
+             "<b>" + num1 + ".<ruby>" + num2 + "<rp>(</rp><rt>•</rt><rp>)</rp></ruby></b>";
+            } else {
+               document.getElementById("result").innerHTML =
+                "<b>" + num1 + "." + numbo.join('') +
+                "<ruby>" + num2 + "<rp>(</rp><rt>•</rt><rp>)</rp></ruby>" +
+                suba.join('') +
+             "<ruby>" + num3 + "<rp>(</rp><rt>•</rt><rp>)</rp></ruby></b>";
+           } 
+
+           
+        });
     </script>
 </body>
 </html>
