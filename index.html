@@ -36,8 +36,7 @@
 
             i = 0;
 
-            document.getElementById("str").innerHTML = "<b>" + son + "/" + mom + "=" + a[i] +"..." + tsh2 + "</b>";
-          i++;   
+            document.getElementById("str").innerHTML = "<b>" + son + "/" + mom + "=" + num +"..." + tsh2 + "</b>";   
 
             while(tsh2 !== 0 && !c.includes(tsh2)) {
                 son = tsh2 * 10;
@@ -45,8 +44,6 @@
                 a.push(num);
                 c.push(tsh2);
                 tsh2 = son % mom;
-                document.getElementById("mane").innerHTML = "<b>" + son + "/" + mom + "=" + a[i] +"..." + tsh2+ "</b>";
-                i++;   
             }
 
             son = tsh2 * 10;
@@ -64,7 +61,11 @@
                 return;
             }
             
-           
+            let maneStr = "";
+            for(let i = 1; i < c.length+1; i++){
+                maneStr += "<b>" + c[i-1]*10 + "/" + mom + "=" + a[i] +"..." + c[i]+ "</b><br>";
+            }
+            document.getElementById("mane").innerHTML = maneStr;
 
             // 반복 소수 처리
             let dup = num; // 반복 시작 나머지
